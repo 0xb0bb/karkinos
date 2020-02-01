@@ -47,7 +47,8 @@ On the first run it will attempt to extract the databases from the compressed fi
 you will need to have the `xz` binary installed and availible through the `PATH` env
 var.
 
-Usage:
+Usage
+-----
 
 	usage: kark.py [-h] [--libdb {glibc,libstdc++}] [--distro DISTRO]
 	               [--arch {x86,amd64,i386,arm,arm64,mips,mips64,ppc,ppc64,sparc,sparc64,m68k,hppa,sh4}]
