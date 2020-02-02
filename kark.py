@@ -451,15 +451,14 @@ def update():
     hst = 'raw.githubusercontent.com'
     url = 'https://'+hst+'/0xb0bb/karkinos/master/db/libs.json'
 
-    # TODO: UNCOMMENT THIS TO ENABLE REAL UPDATES
-    # if not download(url, cwd+'/db/libs.json'):
-    #     error('cannot download index file from %s' % hst)
-    #     return False
+    if not download(url, cwd+'/db/libs.json'):
+        error('cannot download index file from %s' % hst)
+        return False
 
-    # INDEX = load_index()
-    # if not INDEX:
-    #     error('cannot decode downloaded index file')
-    #     return False
+    INDEX = load_index()
+    if not INDEX:
+        error('cannot decode downloaded index file')
+        return False
 
     for lib in INDEX:
         file = cwd+'/db/'+lib+'.db.xz'
