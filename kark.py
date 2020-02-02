@@ -54,7 +54,7 @@ commands:
   - find                 find a library by symbol offsets, file, build id or file hash
   - dump                 dump symbols/gadgets for a given library
   - info                 print some information about a specific library
-  - update               check for updates tp the database
+  - update               check for updates to the database
   - version              display version information and exit
 """
 
