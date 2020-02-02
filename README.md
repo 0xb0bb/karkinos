@@ -15,19 +15,14 @@ The usage is inspired by the excellent [libc-database](https://github.com/niklas
 
 It supports many architectures including:
 
-* i386
-* amd64
-* arm
-* arm64
-* mips
-* mips64
-* ppc
-* ppc64
+* x86   (i386  / amd64)
+* arm   (arm   / arm64)
+* mips  (mips  / mips64)
+* ppc   (ppc   / ppc64)
+* sparc (sparc / sparc64)
 * sh4
 * hppa
 * m68k
-* sparc
-* sparc64
 
 There are many libraries indexed over many distributions spanning many years. The
 libraries indexed are:
