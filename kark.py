@@ -25,6 +25,7 @@ DB     = None
 
 TIME   = ((60 * 60) * 24) * 30
 INDEX  = None
+UPDATE = False
 FILTER = {
     'arch':   None,
     'distro': None,
@@ -381,7 +382,6 @@ def load_index():
 def get_types():
 
     libs = []
-    data = load_index()
     if INDEX:
         for lib in INDEX:
             libs.append(lib)
@@ -404,6 +404,15 @@ def file_exists(file):
     return os.path.isfile(file)
 
 
+def human_size(num):
+
+    for unit in ['b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb']:
+        if abs(num) < 1024.0:
+            return '%3d%s' % (num, unit) if unit == 'b' else '%3.1f%s' % (num, unit)
+        num /= 1024.0
+    return '%.1f%s' % (num, 'zb')
+
+
 def sha1_file(file):
 
     import hashlib
@@ -423,6 +432,16 @@ def sha1_file(file):
 def download(url, file=None):
 
     headers = {'Accept-Encoding': 'none'}
+
+    res = requests.head(url, headers=headers)
+    if res.status_code != 200:
+        return False
+
+    size = ''
+    if 'Content-Length' in res.headers:
+        size = ' (%s)' % human_size(int(res.headers['Content-Length']))
+
+    info('downloading: %s%s' % (url, size))
     if file is not None:
 
         with requests.get(url, stream=True, headers=headers) as req:
@@ -433,7 +452,6 @@ def download(url, file=None):
 
     else:
 
-        info('downloading: %s' % url)
         res = requests.get(url, headers=headers)
         if res.status_code != 200:
             return False
@@ -443,9 +461,12 @@ def download(url, file=None):
     return False
 
 
-def update():
+def update(force=False):
 
-    global INDEX
+    global INDEX, UPDATE
+
+    if UPDATE:
+        return True
 
     cwd = get_cwd()
     hst = 'raw.githubusercontent.com'
@@ -461,24 +482,35 @@ def update():
         return False
 
     for lib in INDEX:
-        file = cwd+'/db/'+lib+'.db.xz'
-        if not file_exists(file):
 
-            url = 'https://'+hst+'/0xb0bb/karkinos/master/db/'+lib+'.db.xz'
+        down = False
+        file = cwd+'/db/'+lib+'.db.xz'
+        sqlf = cwd+'/db/'+lib+'.db'
+
+        if force:
+            if not file_exists(sqlf) or sha1_file(sqlf) != INDEX[lib]['hash']:
+                down = True
+
+        if down or not file_exists(file):
+
+            down = True
+            url  = 'https://'+hst+'/0xb0bb/karkinos/master/db/'+lib+'.db.xz'
             if not download(url, file):
                 error('cannot download %s' % os.path.basename(file))
                 return
 
-        if not extract(file, INDEX[lib]['hash']):
-            error('%s failed; mismatched hash' % os.path.basename(file))
-            return False
+        if down or not file_exists(sqlf):
+            if not extract(file, INDEX[lib]['hash']):
+                error('%s failed; mismatched hash' % os.path.basename(file))
+                return False
 
         INDEX[lib]['time'] = time.time()
 
     with open(cwd+'/db/libs.json', 'w') as f:
         f.write(json.dumps(INDEX))
 
-    check = version_check()
+    UPDATE = True
+    check  = version_check()
     if check is not None:
         print('Version %s is availible, your version is %s.' % (check[0], check[1]))
     else:
@@ -492,7 +524,7 @@ def extract(file, hash):
     if not file_exists(file):
         return False
 
-    info('extracting: %s' % file)
+    info('extracting:  %s' % os.path.basename(file))
 
     out = file[:-3]
     cmd = 'xz -k -f -d {}'.format(shlex.quote(file))
@@ -669,7 +701,7 @@ def main():
 
     INDEX = load_index()
     if not INDEX:
-        if not update():
+        if not update(True):
             fatal('could not update database')
 
     for lib in INDEX:
@@ -753,7 +785,7 @@ def main():
                         print('name: %s' % lib)
 
             else:
-                fatal('argument not recognised')
+                fatal('argument not recognised (%s)' % arg)
 
         else:
 
@@ -835,7 +867,7 @@ def main():
 
     if args.command == 'update':
 
-        if not update():
+        if not update(True):
             fatal('could not update database')
 
 
