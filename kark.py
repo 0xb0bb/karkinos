@@ -19,6 +19,7 @@ import time
 import shlex
 import string
 import re
+import binascii
 
 CONN   = None
 DB     = None
@@ -201,7 +202,8 @@ def get_packages(libid):
     DB.execute(
         'SELECT' +
             '`packages`.`rowid`  as `id`,'  +
-            '`packages`.`name`   as `name`' +
+            '`packages`.`name`   as `name`,' +
+            '`packages`.`url`    as `url`' +
         'FROM' +
             '`packages`' +
         'WHERE' +
@@ -215,7 +217,7 @@ def get_packages(libid):
     ret = []
     for row in res:
 
-        ret.append(row[1])
+        ret.append((row[1], row[2]))
 
     return ret
 
@@ -228,6 +230,8 @@ def get_libs_by_file(file):
 
 def get_libs_by_hash(digest):
 
+    bh = binascii.unhexlify(digest)
+
     DB.execute(
         'SELECT' +
             '`rowid` as `id`,' +
@@ -239,7 +243,7 @@ def get_libs_by_hash(digest):
             '`sha1`     = ? OR' +
             '`sha256`   = ? OR' +
             '`build_id` = ?',
-    (digest, digest, digest, digest,))
+    (sqlite3.Binary(bh), sqlite3.Binary(bh),sqlite3.Binary(bh),sqlite3.Binary(bh),))
 
     res = DB.fetchall()
     if not res:
@@ -849,21 +853,21 @@ def main():
             info('no results found')
         else:
 
-            print('Name:           %s' % name)
-            print('Version:        %s (%s)' % (lib['version'], lib['variant']))
-            print('Distribution:   %s' % lib['distro'])
+            print('\x1b[1mName:\x1b[0m           %s' % name)
+            print('\x1b[1mVersion:\x1b[0m        %s (%s)' % (lib['version'], lib['variant']))
+            print('\x1b[1mDistribution:\x1b[0m   %s' % lib['distro'])
 
             if lib['build_id']:
-                print('Build ID:       %s' % lib['build_id'])
+                print('\x1b[1mBuild ID:\x1b[0m       %s' % binascii.hexlify(lib['build_id']).decode('ascii'))
 
-            print('\nFile Hashes:')
-            print('    MD5:        %s' % lib['hash']['md5'])
-            print('    SHA1:       %s' % lib['hash']['sha1'])
+            print('\n\x1b[1mFile Hashes:\x1b[0m\n')
+            print('    MD5:        %s' % binascii.hexlify(lib['hash']['md5']).decode('ascii'))
+            print('    SHA1:       %s' % binascii.hexlify(lib['hash']['sha1']).decode('ascii'))
 
             if lib['packages']:
-                print('\nPackages:')
+                print('\n\x1b[1mPackages:\x1b[0m\n')
                 for package in lib['packages']:
-                    print('                %s' % package)
+                    print('    %s' % (package[1]))
 
     if args.command == 'update':
 
