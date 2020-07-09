@@ -516,7 +516,7 @@ def update(force=False):
     UPDATE = True
     check  = version_check()
     if check is not None:
-        print('Version %s is availible, your version is %s.' % (check[0], check[1]))
+        print('Version %s is available, your version is %s.' % (check[0], check[1]))
     else:
         print('Your version is up-to-date.')
 
