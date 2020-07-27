@@ -485,6 +485,7 @@ def update(force=False):
         error('cannot decode downloaded index file')
         return False
 
+    hst = 'media.githubusercontent.com'
     for lib in INDEX:
 
         down = False
@@ -498,7 +499,7 @@ def update(force=False):
         if down or not file_exists(file):
 
             down = True
-            url  = 'https://'+hst+'/0xb0bb/karkinos/master/db/'+lib+'.db.xz'
+            url  = 'https://'+hst+'/media/0xb0bb/karkinos/master/db/'+lib+'.db.xz'
             if not download(url, file):
                 error('cannot download %s' % os.path.basename(file))
                 return
