@@ -472,6 +472,10 @@ def update(force=False):
     if UPDATE:
         return True
 
+    if not connected():
+        error('cannot connect to github, please check network connection')
+        return False
+
     cwd = get_cwd()
     hst = 'raw.githubusercontent.com'
     url = 'https://'+hst+'/0xb0bb/karkinos/master/db/libs.json'
@@ -631,6 +635,22 @@ def version_check():
         )
 
     return None
+
+
+def connected():
+
+    try:
+        http = requests.urllib3.PoolManager(timeout=3.0)
+        req  = http.request('HEAD', 'raw.githubusercontent.com')
+        code = req.status
+        req.release_conn()
+    except:
+        code = 0
+
+    if code == 200:
+        return True
+
+    return False
 
 
 def info(msg):
