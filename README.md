@@ -33,8 +33,14 @@ libraries indexed are:
 Install
 -------
 
-Clone the repository or download an extract somewhere, within that folder you can
-access the tool by running:
+You will need [Git LFS](https://git-lfs.github.com/) which can usually be installed
+with:
+```
+git lfs install
+```
+
+Then simply clone the repository or download an extract somewhere, within that folder
+you can access the tool by running:
 
 	$ ./kark.py --help
 
