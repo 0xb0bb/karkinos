@@ -36,6 +36,7 @@ Install
 You will need [Git LFS](https://git-lfs.github.com/) which can usually be installed
 with:
 ```
+sudo apt-get install git-lfs
 git lfs install
 ```
 
