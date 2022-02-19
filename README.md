@@ -33,15 +33,17 @@ libraries indexed are:
 Install
 -------
 
-You will need [Git LFS](https://git-lfs.github.com/) which can usually be installed
-with:
+The preferred method is to just download and extract the latest release. Karkinos
+will manage updates by itself from that point on.
+
+Alternatively, if you would like to clone the repository, you will need [Git LFS](https://git-lfs.github.com/)
+which can usually be installed with:
 ```
 sudo apt-get install git-lfs
 git lfs install
 ```
 
-Then simply clone the repository or download an extract somewhere, within that folder
-you can access the tool by running:
+Once you have Karkinos through either method, you can then access the tool by running:
 
 	$ ./kark.py --help
 
