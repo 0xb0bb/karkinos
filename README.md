@@ -38,9 +38,7 @@ Install
 -------
 
 The preferred method is to just download and extract the latest release. Karkinos
-will manage updates by itself from that point on.
-
-Alternatively, you can clone this repository.
+will manage updates by itself from that point on. Alternatively, you can clone this repository.
 
 Once you have Karkinos through either method, you can then access the tool by running:
 

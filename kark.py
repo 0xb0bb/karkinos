@@ -44,9 +44,9 @@ architectures indexed:
   - mips  (mips,  mips64)
   - ppc   (ppc,   ppc64)
   - sparc (sparc, sparc64)
-  - m68k
-  - hppa
   - sh4
+  - hppa
+  - m68k
   - riscv
 
 libraries indexed:
