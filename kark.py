@@ -469,6 +469,8 @@ def update(force=False):
 
     global INDEX, UPDATE
 
+    BRANCH = 'master'
+
     if UPDATE:
         return True
 
@@ -478,7 +480,7 @@ def update(force=False):
 
     cwd = get_cwd()
     hst = 'raw.githubusercontent.com'
-    url = 'https://'+hst+'/0xb0bb/karkinos/master/db/libs.json'
+    url = 'https://'+hst+'/0xb0bb/karkinos/'+BRANCH+'/db/libs.json'
 
     if not download(url, cwd+'/db/libs.json'):
         error('cannot download index file from %s' % hst)
@@ -489,28 +491,31 @@ def update(force=False):
         error('cannot decode downloaded index file')
         return False
 
-    hst = 'media.githubusercontent.com'
     for lib in INDEX:
 
         down = False
-        file = cwd+'/db/'+lib+'.db.xz'
+        dbxz = cwd+'/db/'+lib+'.db.xz'
         sqlf = cwd+'/db/'+lib+'.db'
 
         if force:
             if not file_exists(sqlf) or sha1_file(sqlf) != INDEX[lib]['hash']:
                 down = True
 
-        if down or not file_exists(file):
+        if down or not file_exists(dbxz):
+            for file in INDEX[lib]['bits']:
 
-            down = True
-            url  = 'https://'+hst+'/media/0xb0bb/karkinos/master/db/'+lib+'.db.xz'
-            if not download(url, file):
-                error('cannot download %s' % os.path.basename(file))
-                return
+                file = cwd+'/db/'+file
+                if down or not file_exists(file):
+
+                    down = True
+                    url  = 'https://'+hst+'/0xb0bb/karkinos/'+BRANCH+'/db/'+os.path.basename(file)
+                    if not download(url, file):
+                        error('cannot download %s' % os.path.basename(file))
+                        return
 
         if down or not file_exists(sqlf):
-            if not extract(file, INDEX[lib]['hash']):
-                error('%s failed; mismatched hash' % os.path.basename(file))
+            if not extract(dbxz, INDEX[lib]['hash']):
+                error('%s failed; mismatched hash' % os.path.basename(dbxz))
                 return False
 
         INDEX[lib]['time'] = time.time()
@@ -530,19 +535,32 @@ def update(force=False):
 
 def extract(file, hash):
 
+    cmd = 'cat {}.* > {}'.format(shlex.quote(file), shlex.quote(file))
+    os.system(cmd)
+
     if not file_exists(file):
+        cleanup(file)
         return False
 
     info('extracting:  %s' % os.path.basename(file))
 
     out = file[:-3]
-    cmd = 'xz -k -f -d {}'.format(shlex.quote(file))
+    cmd = 'xz -k -f -d -T0 {}'.format(shlex.quote(file))
     os.system(cmd)
 
     if not file_exists(out):
+        cleanup(file)
         return False
 
+    cleanup(file)
     return sha1_file(out) == hash
+
+
+def cleanup(file):
+    
+    files = glob.glob(file+'.*')
+    for file in files:
+        os.remove(file)
 
 
 def connect(libdb):
