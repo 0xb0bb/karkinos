@@ -1,1 +1,39 @@
-{"glibc": {"hash":"fd53322cc19cdbe47890f32e85014d51ed4e56b4","time":1643567579}, "libstdc++": {"hash":"fa481549405b3ca04b01b631f57cd0bb2dd65139","time":1643571854}}
+{
+   "glibc":{
+      "hash":"fd53322cc19cdbe47890f32e85014d51ed4e56b4",
+      "time":1643567579,
+      "bits":[
+         "glibc.db.xz.aa"
+      ]
+   },
+   "glibc-ld":{
+      "hash":"a6e4b4e1088105f1b1050852a315014edd4dff35",
+      "time":1643568314,
+      "bits":[
+         "glibc-ld.db.xz.aa"
+      ]
+   },
+   "libgcc":{
+      "hash":"bad18e546cbc9e2569597a7641dc625d591fb132",
+      "time":1643569053,
+      "bits":[
+         "libgcc.db.xz.aa"
+      ]
+   },
+   "libstdc++":{
+      "hash":"fa481549405b3ca04b01b631f57cd0bb2dd65139",
+      "time":1643571854,
+      "bits":[
+         "libstdc++.db.xz.aa",
+         "libstdc++.db.xz.ab",
+         "libstdc++.db.xz.ac"
+      ]
+   },
+   "musl":{
+      "hash":"52c1dee03d0b865dd4faa7f06812056bca45b539",
+      "time":1643572291,
+      "bits":[
+         "musl.db.xz.aa"
+      ]
+   }
+}
