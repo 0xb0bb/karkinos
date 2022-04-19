@@ -23,12 +23,16 @@ It supports many architectures including:
 * sh4
 * hppa
 * m68k
+* riscv
 
 There are many libraries indexed over many distributions spanning many years. The
 libraries indexed are:
 
 * glibc
 * libstdc++
+* glibc-ld
+* libgcc
+* musl
 
 Install
 -------
@@ -36,19 +40,14 @@ Install
 The preferred method is to just download and extract the latest release. Karkinos
 will manage updates by itself from that point on.
 
-Alternatively, if you would like to clone the repository, you will need [Git LFS](https://git-lfs.github.com/)
-which can usually be installed with:
-```
-sudo apt-get install git-lfs
-git lfs install
-```
+Alternatively, you can clone this repository.
 
 Once you have Karkinos through either method, you can then access the tool by running:
 
 	$ ./kark.py --help
 
 On the first run it will attempt to extract the databases from the compressed files,
-you will need to have the `xz` binary installed and availible through the `PATH` env
+you will need to have the `xz` and `cat` binaries installed and availible through the `PATH` env
 var.
 
 Usage
@@ -74,10 +73,14 @@ Usage
 	  - m68k
 	  - hppa
 	  - sh4
+	  - riscv
 
 	libraries indexed:
 	  - glibc
 	  - libstdc++
+	  - glibc-ld
+	  - libgcc
+	  - musl
 
 	commands:
 	  - find        find a library by symbol offsets, file, build id or file hash

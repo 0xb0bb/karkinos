@@ -47,10 +47,14 @@ architectures indexed:
   - m68k
   - hppa
   - sh4
+  - riscv
 
 libraries indexed:
   - glibc
   - libstdc++
+  - glibc-ld
+  - libgcc
+  - musl
 
 commands:
   - find                 find a library by symbol offsets, file, build id or file hash
@@ -773,7 +777,8 @@ def main():
         'mips',  'mips64',
         'ppc',   'ppc64',
         'sparc', 'sparc64',
-        'm68k',  'hppa',    'sh4',
+        'm68k',  'hppa',
+        'sh4',   'riscv',
     ], help='architecture to filter in symbol search')
 
     parser.add_argument('--endian', default=None, choices=[
